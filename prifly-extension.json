@@ -1,0 +1,9 @@
+{
+  "id": "porkbun",
+  "name": "Porkbun",
+  "description": "Porkbun domains and DNS from any session: list your domains, read and change DNS records, check whether a name is free and its price, and any other Porkbun API call. Reads run at once; every change waits for your confirm.",
+  "version": "0.1.0",
+  "main": "index.ts",
+  "prompt": "prompt.md",
+  "vault": ["porkbun"]
+}

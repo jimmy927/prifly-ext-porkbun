@@ -1,0 +1,18 @@
+{
+  "name": "prifly-ext-porkbun",
+  "private": true,
+  "license": "FSL-1.1-ALv2",
+  "type": "module",
+  "description": "A prifly extension: Porkbun domains and DNS from any session — list domains, read and change DNS records, check availability, any Porkbun API v3 call; every write confirmed by the reader.",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "check": "biome check ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@prifly/extension-api": "git+ssh://git@github.com/jimmy927/prifly-extension-api.git#v0.8.0",
+    "@types/bun": "^1.1.14",
+    "typescript": "^7.0.2"
+  }
+}
