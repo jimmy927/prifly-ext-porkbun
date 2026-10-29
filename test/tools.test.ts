@@ -175,6 +175,18 @@ describe("porkbun_domains", () => {
     expect(text).toBe("Porkbun error: Invalid API key: [redacted] / [redacted] (INVALID_API_KEY)");
   });
 
+  test("a domain without API access says where to switch it on", async () => {
+    const { fake } = setup([
+      {
+        path: /^dns\/retrieve\//,
+        answer: () => porkbunError("Domain is not opted in to API access.", "API_ACCESS_DISABLED"),
+      },
+    ]);
+    expect(await fake.callTool("porkbun_dns_records", { domain: "prifly.dev" })).toBe(
+      "Porkbun error: Domain is not opted in to API access. (API_ACCESS_DISABLED) Turn on Opt In All Domains at porkbun.com/account/api (it covers every domain, future ones too), or switch API Access on in that domain's Details under Domain Management.",
+    );
+  });
+
   test("an unreachable Porkbun is said", async () => {
     const { fake } = setup([]);
     globalThis.fetch = (async () => {

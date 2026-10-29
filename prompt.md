@@ -6,4 +6,4 @@ Use the `porkbun_*` tools for the reader's Porkbun domains and DNS, not curl or 
 - `porkbun_dns_change` creates, edits or deletes one record. For anything else (registering or renewing a domain, nameservers, URL forwarding, auto-renew, balance) use `porkbun_api` with the path from Porkbun's API v3 documentation; money fields (`cost`) are in US cents, so $11.08 is 1108. To register a name, run `porkbun_check` first and send exactly its price as `cost`.
 - Every write shows the reader a confirm card first. "Not done: you cancelled" means they said no: do not try again unless they ask.
 - If a tool says Porkbun is not set up, tell the reader to add the `porkbun` entry in Settings → Vault.
-- A domain whose API access is off in Porkbun (the list says so) cannot have its DNS read or changed until the reader turns it on there.
+- A domain whose API access is off in Porkbun (the list says so) cannot have its DNS read or changed until the reader turns it on there: Opt In All Domains at porkbun.com/account/api for every domain, or API Access in that domain's Details.

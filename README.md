@@ -19,7 +19,9 @@ as your own Porkbun account.
 
 1. In Settings → Extensions, enable **Porkbun**.
 2. On porkbun.com/account/api create an API key (`pk1_…`) and its secret
-   (`sk1_…`), and switch **API access** on for each domain to use.
+   (`sk1_…`). On the same page turn on **Opt In All Domains**, which gives
+   the API every domain, future ones too; or switch **API Access** on per
+   domain in its Details under Domain Management.
 3. In Settings → Vault add an API-token entry named **`porkbun`** (level 1,
    the one an extension can read) whose token is both keys as JSON, with
    Porkbun's own field names:

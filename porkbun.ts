@@ -39,12 +39,17 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
     : undefined;
 }
 
+/** Where a domain's API access is switched on, for every domain at once or one by one. */
+export const API_ACCESS_HINT =
+  "Turn on Opt In All Domains at porkbun.com/account/api (it covers every domain, future ones too), or switch API Access on in that domain's Details under Domain Management.";
+
 /** "Porkbun error: Invalid domain. (INVALID_DOMAIN)" — or the HTTP status when it said nothing. */
 function sayError(status: number, body: unknown): string {
   const record = asRecord(body);
   const message = typeof record?.["message"] === "string" ? record["message"] : undefined;
   const code = typeof record?.["code"] === "string" ? ` (${record["code"]})` : "";
-  if (message !== undefined) return `Porkbun error: ${message}${code}`;
+  const hint = record?.["code"] === "API_ACCESS_DISABLED" ? ` ${API_ACCESS_HINT}` : "";
+  if (message !== undefined) return `Porkbun error: ${message}${code}${hint}`;
   return `Porkbun answered HTTP ${status}${typeof body === "string" && body !== "" ? `: ${body.slice(0, 300)}` : ""}`;
 }
 

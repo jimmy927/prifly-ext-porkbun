@@ -17,7 +17,7 @@ export const VAULT_ENTRY = "porkbun";
 
 export type Creds = { apikey: string; secretapikey: string };
 
-export const NO_ENTRY = `Porkbun is not set up: there is no \`${VAULT_ENTRY}\` entry in prifly's vault. In Settings → Vault add an API-token entry named \`${VAULT_ENTRY}\` (level 1) whose token is {"apikey": "pk1_…", "secretapikey": "sk1_…"} — the two keys from porkbun.com/account/api, with API access switched on for the domains to use.`;
+export const NO_ENTRY = `Porkbun is not set up: there is no \`${VAULT_ENTRY}\` entry in prifly's vault. In Settings → Vault add an API-token entry named \`${VAULT_ENTRY}\` (level 1) whose token is {"apikey": "pk1_…", "secretapikey": "sk1_…"} — the two keys from porkbun.com/account/api, with Opt In All Domains on there (or API access on per domain).`;
 
 export const BAD_ENTRY = `The \`${VAULT_ENTRY}\` vault entry is not in the form this extension reads. Its token must be {"apikey": "pk1_…", "secretapikey": "sk1_…"} (or pk1_…:sk1_…).`;
 
