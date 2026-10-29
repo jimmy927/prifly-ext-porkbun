@@ -10,18 +10,24 @@ import { type Call, type Failure, type Method, psend, usd } from "./porkbun";
 import { fitText, type Ready, stringArg, type ToolSpec } from "./tools-common";
 import { confirmedSend } from "./write";
 
-/** The POST endpoints that only read, by the start of their path after `/api/json/v3/`. */
+/** The endpoints that only read, GET or POST, by their path after `/api/json/v3/`. */
 const READS =
-  /^(?:ping|ip|pricing\/get|domain\/(?:checkDomain|listAll|getNs|getGlue|getUrlForwarding)(?:\/|$)|dns\/(?:retrieve|retrieveByNameType|getDnssecRecords)(?:\/|$)|email\/(?:getForwards|getMailboxes)(?:\/|$)|marketplace\/getAll$)/;
+  /^(?:ping|ip|pricing\/get|marketplace\/getAll|domain\/(?:checkDomain|listAll|getNs|getGlue|getUrlForwarding)|dns\/(?:retrieve|retrieveByNameType|getDnssecRecords)|email\/(?:getForwards|getMailboxes))(?:\/|$)/;
 
 /**
- * Whether a call changes nothing and returns nothing secret. A GET reads,
- * except `ssl/` (it returns the certificate's private key); a POST reads only
- * on the list above, and always with a `dryRun` it is still a card.
+ * The endpoints that read only as a GET: their POST form, where they have one,
+ * changes something (`account/autoTopup`).
+ */
+const GET_READS =
+  /^(?:domain\/(?:get|getTransfer|getTransferSetup|listTransfers|getContacts|getRegistrationRequirements)|account\/(?:autoTopup|balance|invoices|invoice|apiSettings|inviteStatus|topupCryptoStatus)|closeout\/(?:search|get)|aftermarket\/search|dns\/(?:preflight|history|diff|scan)|hosting\/(?:plans|get|files)|webhook\/(?:eventTypes|list|get|deliveries|delivery)|mock)(?:\/|$)/;
+
+/**
+ * Whether a call changes nothing and returns nothing secret: only a path on
+ * the allowlists, so an unknown one (a write, `ssl/` with the certificate's
+ * private key) gets a card whatever its method. A `dryRun` is still a card.
  */
 export function isRead(method: Method, path: string): boolean {
-  if (path.startsWith("ssl/")) return false;
-  return method === "GET" || READS.test(path);
+  return READS.test(path) || (method === "GET" && GET_READS.test(path));
 }
 
 const NOT_A_PATH =
@@ -39,7 +45,8 @@ export function cleanPath(text: string): string | null {
     /[\s\\?#]|(?:^|\/)\.\.?(?:\/|$)/.test(path)
   )
     return null;
-  return /^[\w\-./%@:~]+$/.test(path) ? path : null;
+  // No `%`: the URL parser would read %2e%2e as `..`, and the read check sees the raw text.
+  return /^[\w\-./@:~]+$/.test(path) ? path : null;
 }
 
 /** Amounts Porkbun takes in US cents, by their field name in a body. */

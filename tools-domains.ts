@@ -73,7 +73,11 @@ async function runDomains(ready: Ready, args: Record<string, unknown>): Promise<
   });
   if ("failure" in answer) return answer.failure;
   if (answer.domains.length === 0) return "No domains in the Porkbun account match.";
-  return fitText(answer.domains.map(domainLine).join("\n"), ready, "porkbun-domains");
+  // Soonest expiry first (dates are `YYYY-MM-DD HH:MM:SS`, so text order is date order); no date last.
+  const soonest = [...answer.domains].sort((a, b) =>
+    (a.expireDate ?? "￿").localeCompare(b.expireDate ?? "￿"),
+  );
+  return fitText(soonest.map(domainLine).join("\n"), ready, "porkbun-domains");
 }
 
 export const domainsTool: ToolSpec = {

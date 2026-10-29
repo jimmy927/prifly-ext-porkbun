@@ -35,8 +35,17 @@ describe("what counts as a read", () => {
     expect(isRead("POST", "domain/updateNs/prifly.dev")).toBe(false);
     expect(isRead("POST", "dns/delete/prifly.dev/1")).toBe(false);
     expect(isRead("POST", "account/topup")).toBe(false);
-    // Looks like a read by its start, is not one.
+    // Looks like a read by its start, is not one: every alternative ends at a path boundary.
     expect(isRead("POST", "domain/listAllAndDelete")).toBe(false);
+    expect(isRead("POST", "pingX")).toBe(false);
+    expect(isRead("POST", "ipfoo")).toBe(false);
+    expect(isRead("POST", "pricing/getaway")).toBe(false);
+    // A GET is no more a read than its endpoint is: a write endpoint asked by GET still gets a card.
+    expect(isRead("GET", "domain/create/prifly.app")).toBe(false);
+    expect(isRead("GET", "dns/delete/prifly.dev/1")).toBe(false);
+    // autoTopup reads by GET and changes the account by POST.
+    expect(isRead("GET", "account/autoTopup")).toBe(true);
+    expect(isRead("POST", "account/autoTopup")).toBe(false);
     // The certificate's private key: shown to the reader first, GET or not.
     expect(isRead("GET", "ssl/retrieve/prifly.dev")).toBe(false);
     expect(isRead("POST", "ssl/retrieve/prifly.dev")).toBe(false);
@@ -45,7 +54,17 @@ describe("what counts as a read", () => {
   test("a path is the part after /api/json/v3/ and nothing else", () => {
     expect(cleanPath("/domain/getNs/prifly.dev")).toBe("domain/getNs/prifly.dev");
     expect(cleanPath("/api/json/v3/ping")).toBe("ping");
-    for (const bad of ["https://evil.example/x", "../x", "a/../b", "a?b=1", "", "a b"])
+    for (const bad of [
+      "https://evil.example/x",
+      "../x",
+      "a/../b",
+      "a?b=1",
+      "",
+      "a b",
+      // The URL parser would turn these into `..` after the read check had passed them.
+      "domain/listAll/%2e%2e/%2e%2e/domain/create/x.com",
+      "dns/retrieve/%2E%2E/%2e%2E/dns/delete/d/1",
+    ])
       expect(cleanPath(bad)).toBeNull();
   });
 });
