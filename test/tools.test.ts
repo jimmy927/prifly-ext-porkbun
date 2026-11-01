@@ -101,7 +101,7 @@ describe("porkbun_domains", () => {
     expect(text).toBe(
       [
         // The answer lists prifly.dev first; the tool puts the sooner expiry first.
-        "old-site.com | expires 2026-12-24 00:00:00 | auto-renew off | ACTIVE | API access off (turn it on in Porkbun to change its DNS)",
+        "old-site.com | expires 2026-12-24 00:00:00 | auto-renew off | ACTIVE",
         "prifly.dev | expires 2027-03-01 12:00:00 | auto-renew on | ACTIVE",
       ].join("\n"),
     );

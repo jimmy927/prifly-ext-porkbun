@@ -21,7 +21,6 @@ type OwnedDomain = {
   status?: string;
   expireDate?: string;
   autoRenew?: number | string;
-  apiAccess?: number | string;
   whoisPrivacy?: number | string;
   securityLock?: number | string;
 };
@@ -52,7 +51,7 @@ export async function listDomains(
 
 const on = (flag: number | string | undefined) => flag === 1 || flag === "1";
 
-/** `example.com | expires 2027-03-01 | auto-renew on | ACTIVE`, with a flag when the API cannot touch it. */
+/** `example.com | expires 2027-03-01 | auto-renew on | ACTIVE`. */
 function domainLine(each: OwnedDomain): string {
   const parts = [
     each.domain,
@@ -60,7 +59,6 @@ function domainLine(each: OwnedDomain): string {
     `auto-renew ${on(each.autoRenew) ? "on" : "off"}`,
     each.status ?? "?",
   ];
-  if (!on(each.apiAccess)) parts.push("API access off (turn it on in Porkbun to change its DNS)");
   return parts.join(" | ");
 }
 
